@@ -3,23 +3,17 @@
 # http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming
 
 import io
-import picamera
 import logging
-import socketserver
+import os
 from threading import Condition
-from http import server
 
-PAGE="""\
-<html>
-<head>
-<title>Raspberry Pi - Surveillance Camera</title>
-</head>
-<body>
-<center><h1>Raspberry Pi - Surveillance Camera</h1></center>
-<center><img src="stream.mjpg" width="640" height="480"></center>
-</body>
-</html>
-"""
+from http import server
+import socketserver
+
+import picamera
+
+with open(os.path.join(os.path.dirname(__file__), 'templates', 'index.html'), 'r') as f:
+    PAGE = f.read()
 
 class StreamingOutput(object):
     def __init__(self):
@@ -80,15 +74,21 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
+    
+class Frontend():
+    def __init__(self):
+        with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
+            global output
+            output = StreamingOutput()
+            #Uncomment the next line to change your Pi's Camera rotation (in degrees)
+            #camera.rotation = 90
+            camera.start_recording(output, format='mjpeg')
+            try:
+                address = ('', 8000)
+                server = StreamingServer(address, StreamingHandler)
+                server.serve_forever()
+            finally:
+                camera.stop_recording()
 
-with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
-    output = StreamingOutput()
-    #Uncomment the next line to change your Pi's Camera rotation (in degrees)
-    #camera.rotation = 90
-    camera.start_recording(output, format='mjpeg')
-    try:
-        address = ('', 8000)
-        server = StreamingServer(address, StreamingHandler)
-        server.serve_forever()
-    finally:
-        camera.stop_recording()
+if __name__ == '__main__':
+    Frontend()

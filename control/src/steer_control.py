@@ -2,10 +2,10 @@ import RPi.GPIO as GPIO
 import time
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+from pwm_control import PWMControl
 
 
-class DriveControl():
+class SteerControl(PWMControl):
     def __init__(self, pin, frequency, max, min, neutral, step):
         self.pin = pin
         self.frequency = frequency
@@ -30,42 +30,37 @@ class DriveControl():
         PWM-Min: {self.min}\n \
         PWM-Neutral: {self.neutral}\n \
         PWM-Step: {self.step}\n'
-        )
-        
+                     )
+
+    def set_steering(self, data):
+        print(type(data))
+        if data > 0:
+            self.increase_duty_cycle()
+        elif data < 0:
+            self.decrease_duty_cycle()
+        return
+
     def increase_duty_cycle(self):
         if self.duty_cycle >= self.max:
             pass
         else:
             self.duty_cycle += self.step
-            self.pwm.ChangeDutyCycle(self.duty_cycle) 
-
+            self.pwm.ChangeDutyCycle(self.duty_cycle)
+            time.sleep(0.03)
+            self.pwm.ChangeDutyCycle(0)
         logging.info('increase')
         logging.info(self.duty_cycle)
         return
 
     def decrease_duty_cycle(self):
-        #if self.duty_cycle == self.neutral:
-        #    self._engage_reverse()
         if self.duty_cycle <= self.min:
             pass
         else:
             self.duty_cycle -= self.step
-            self.pwm.ChangeDutyCycle(self.duty_cycle) 
+            self.pwm.ChangeDutyCycle(self.duty_cycle)
+            time.sleep(0.03)
+            self.pwm.ChangeDutyCycle(0)
         logging.info('decrease')
         logging.info(self.duty_cycle)
-        return
-    
-    def _engage_reverse(self):
-        self.pwm.ChangeDutyCycle(self.min)
-        time.sleep(2.5)
-        self.pwm.ChangeDutyCycle(self.neutral)
-        return
 
-    def exit(self):
-        logging.info('exit')
-
-        self.pwm.ChangeDutyCycle(self.neutral) 
-        time.sleep(1.5)
-        self.pwm.stop()
-        GPIO.cleanup()
         return
