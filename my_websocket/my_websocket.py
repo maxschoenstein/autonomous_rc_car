@@ -29,6 +29,16 @@ def steer(sid, data):
 
 
 @sio.event
+def exit(sid, data):
+    sio.emit('exit', True)
+
+
+@sio.event
+def neutral(sid, data):
+    sio.emit('neutral', True)
+
+
+@sio.event
 def Escape(sid):
     sys.exit()
 
