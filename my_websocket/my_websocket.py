@@ -20,22 +20,44 @@ def disconnect(sid):
 
 @sio.event
 def drive(sid, data):
-    sio.emit('drive', data)
+    print(f'drive: {data}')
+    # sio.emit('drive', data)
 
 
 @sio.event
 def steer(sid, data):
-    sio.emit('steer', data)
+    print(f'steer: {data}')
+    # sio.emit('steer', data)
+
+
+@sio.event
+def steerSensitivity(sid, data):
+    print(f'steerSensitivity: {data}')
+    # sio.emit('steerSensitivity', data)
+
+
+@sio.event
+def driveSensitivity(sid, data):
+    print(f'driveSensitivity: {data}')
+    # sio.emit('driveSensitivity', data)
+
+
+@sio.event
+def power(sid, data):
+    print(f'power: {data}')
+    # sio.emit('power', data)
 
 
 @sio.event
 def exit(sid, data):
-    sio.emit('exit', True)
+    print(f'exit: {data}')
+    # sio.emit('exit', True)
 
 
 @sio.event
 def neutral(sid, data):
-    sio.emit('neutral', True)
+    print(f'neutral: {data}')
+    # sio.emit('neutral', True)
 
 
 @sio.event
@@ -44,7 +66,7 @@ def Escape(sid):
 
 
 if __name__ == '__main__':
-    your_ip_address = '0.0.0.0'
+    your_ip_address = 'localhost'
     your_port = 5001
 
     # Use eventlet to run the server with WebSocket support

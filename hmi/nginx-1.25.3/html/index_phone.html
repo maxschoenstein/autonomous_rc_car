@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> RC Car Controller </title>
+    <style>
+        /* Buttons */
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,700italic);
+
+        *{margin: 0px; padding: 0px}
+
+        h1, button{
+        color:#fff;
+        text-align: center;
+        padding: 20px;
+        }
+
+        p{
+        color:#fff;
+        text-align: center;
+        padding-top: 500px;
+        font-size: 10px;
+        }
+
+        a{
+        text-decoration:none;
+        color:#fff;
+        }
+
+        a:hover{
+        color:#2ecc71;
+        }
+
+        .main{
+        width: 100%;
+        }
+
+        .sub-main{
+        width: 30%;
+        margin:22px;
+        float: left;
+        }
+
+        .calibrationButton{
+        text-align: center;
+        cursor: pointer;
+        font-size:30px;
+        margin: 0 0 0 100px;
+        }
+
+        /*Button Three*/
+        .calibrationButton {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #f39c12;
+            border: none;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .calibrationButton:hover{
+        background:#fff;
+        box-shadow:0px 2px 10px 5px #97B1BF;
+        color:#000;
+        }
+
+        .calibrationButton:after {
+            content: "";
+            background: #f1c40f;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding-top: 300%;
+            padding-left: 350%;
+            margin-left: -20px !important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s
+        }
+
+        .calibrationButton:active:after {
+            padding: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s
+        }
+
+
+        .neutralButton{
+            text-align: center;
+            cursor: pointer;
+            font-size:30px;
+            margin: 0 0 0 100px;
+            }
+
+        /*Button Three*/
+        .neutralButton {
+            position: absolute;
+            top: 100%; /* Position the button at the bottom of the parent container */
+            left: 0;
+            margin-top: 20px; /* Add a margin between the calibrationButton and the neutralButton */
+            background-color: #f39c12;
+            border: none;
+            padding: 30px;
+            width: 300px;
+            text-align: center;
+            -webkit-transition-duration: 0.4s;
+            transition-duration: 0.4s;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .neutralButton:hover{
+        background:#fff;
+        box-shadow:0px 2px 10px 5px #97B1BF;
+        color:#000;
+        }
+
+        .neutralButton:after {
+        content: "";
+        background: #f1c40f;
+        display: block;
+        position: absolute;
+        top: calc(100% + 20px); /* Places the button below the calibrationButton */
+        left: 0;
+        padding-top: 300%;
+        padding-left: 350%;
+        margin-left: -20px !important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s
+        }
+
+        .neutralButton:active:after {
+            padding: 0;
+            position: absolute;
+            top: 30;
+            left: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s
+        }
+
+        /* Page */
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        body {
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/default_image.jpg'); /* Hintergrundbild festlegen */
+            background-position: center;
+            background-size: cover;
+            filter: blur(20px); /* Optional: Hintergrundbild verschwommen machen */
+            z-index: -1; /* Hintergrundelement unter dem Inhalt platzieren */
+        }
+
+        /* #beta-container {
+            margin-top: 25px;
+            font-size: 24px;
+        }
+
+        #gamma-container {
+            margin-top: 30px;
+            font-size: 24px;
+        }
+
+        div.anglebox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #fcfcfc;
+        }
+
+        .alignleft {
+            text-align: left; /* Align text left within the anglebox 
+        }*/
+
+        #stream-image {
+            width: auto; /* Set the image width to 100% of the viewport */
+            height: 100vh;  
+        }
+    </style>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script> -->
+
+</head>
+<body>
+    <div id="container">
+        <div class="background-image"></div>
+        <center>
+            <!-- <img id="stream-image" src="stream.mjpg"> -->
+            <img id="stream-image" src="/default_image.jpg">
+        </center>
+
+        <div class="anglebox" style="width: 150px; height: 200px; border: 3px solid rgb(247, 5, 5); text-align: left;">
+            <p>Steer: <span id="calibratedSteerPercentage">-</span></p>
+            <p>Drive: <span id="calibratedDrivePercentage">-</span></p>
+
+            <div class="main">
+                <div class="sub-main">
+                    <button class="calibrationButton">Calibrate</button>
+                    <button class="neutralButton">Neutral</button>
+                    <button class="stopButton">Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // const socket = io('http://192.168.0.170:5001');
+        
+        const steerMax = 30
+        const driveMax = 30
+
+        var calibrated = false
+
+        var neutralSteer = 0
+        var neutralDrive = 0
+
+        var absoluteBeta = 0
+        var absoluteGamma = 0
+
+        let lastExecution = 0;
+
+        function handleOrientation(event) {
+            const now = Date.now();
+            if (now - lastExecution >= 500) {
+                // Update the last execution timestamp
+                lastExecution = now;
+
+                absoluteBeta = Math.round(event.beta);
+                absoluteGamma = Math.round(event.gamma);
+
+                if (absoluteBeta > 100){
+                    var calibratedSteerAngle = (180 - absoluteBeta)
+                }
+                else if (absoluteBeta < -100) {
+                    var calibratedSteerAngle = (-180 - absoluteBeta)
+                }
+                else {
+                    var calibratedSteerAngle = absoluteBeta - neutralSteer
+                }
+                
+                if (neutralDrive < 0 && absoluteGamma > driveMax){
+                    var calibratedDriveAngle = -neutralDrive -(180 - absoluteGamma)
+                }
+                else {
+                    var calibratedDriveAngle = absoluteGamma - neutralDrive
+                }
+            
+                if (calibratedDriveAngle > driveMax){
+                    calibratedDriveAngle = driveMax
+                }
+                else if (calibratedDriveAngle < -driveMax) {
+                    calibratedDriveAngle = -driveMax
+                }   
+
+
+                if (calibratedSteerAngle > steerMax){
+                    calibratedSteerAngle = steerMax
+                }
+                else if (calibratedSteerAngle < -steerMax) {
+                    calibratedSteerAngle = -steerMax
+                }
+
+                const calibratedSteerPercentage = Math.round(-calibratedSteerAngle/steerMax * 100)
+                const calibratedDrivePercentage = Math.round(calibratedDriveAngle/driveMax * 100)
+
+                document.getElementById("calibratedSteerPercentage").textContent = calibratedSteerPercentage;
+                document.getElementById("calibratedDrivePercentage").textContent = calibratedDrivePercentage;
+                    
+                if (calibrated == true) {
+                    socket.emit('steer', calibratedSteerPercentage);
+                    socket.emit('drive', calibratedDrivePercentage);
+                }
+            }
+        }
+
+        window.addEventListener("deviceorientation", handleOrientation);
+
+        // Event listener for the calibration button
+        document.addEventListener("DOMContentLoaded", function() {
+            const calibrationButton = document.getElementById("calibrationButton");
+            calibrationButton.addEventListener("click", calibrateDriveAndSteering);
+        });
+
+        function calibrateDriveAndSteering() {
+            calibrated = true
+
+            neutralSteer = absoluteBeta
+            neutralDrive = absoluteGamma
+        }
+
+        // Event listener for the stop button
+        document.addEventListener("DOMContentLoaded", function() {
+            const stopButton = document.getElementById("stopButton");
+            stopButton.addEventListener("click", stopCar);
+        });
+
+        function stopCar() {
+            calibrated = false
+            socket.emit('exit', true);
+        }
+
+        // Event listener for the neutral button
+        document.addEventListener("DOMContentLoaded", function() {
+            const neutralButton = document.getElementById("neutralButton");
+            neutralButton.addEventListener("click", neutralizeCar);
+        });
+
+        function neutralizeCar() {
+            calibrated = false
+            socket.emit('neutral', true);
+        }
+
+    </script>
+</body>
+</html>

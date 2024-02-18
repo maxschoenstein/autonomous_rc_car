@@ -1,0 +1,6 @@
+version: '3'
+services:
+  webpage:
+      build: ./hmi/Dockerfile
+      ports:
+          - "8000:8000"

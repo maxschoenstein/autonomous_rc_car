@@ -1,19 +1,5 @@
-FROM arm32v7/python:3.7-slim-buster
+FROM nginx
 
-WORKDIR /usr/src/app
-
-COPY ./src/templates ./templates
-COPY ./src/hmi.py ./hmi.py
-COPY ./requirements.txt ./requirements.txt
-
-ARG pyenv=/usr/local/bin/python3
-
-RUN apt-get update
-RUN apt-get install -y build-essential
-
-RUN ${pyenv} -m pip install --upgrade pip 
-RUN ${pyenv} -m pip install picamera
-
-# RUN pip install -r requirements.txt
-
-CMD ["python", "./hmi.py"]
+COPY ./nginx-1.25.3/conf/nginx.conf /etc/nginx/conf/nginx.conf
+COPY ./nginx-1.25.3/html/index_phone.html /etc/nginx/html/index_phone.html
+COPY ./nginx-1.25.3/html/default_image.jpg /etc/nginx/html/default_image.jpg
